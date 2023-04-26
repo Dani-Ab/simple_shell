@@ -16,6 +16,7 @@ void execu(char **argv, char **env)
 	int val = 0;
 
 	pid = fork();
+
 	if (pid == -1)
 		perror("Error");
 	if (pid == 0)
@@ -23,10 +24,10 @@ void execu(char **argv, char **env)
 		if (argv)
 		{
 			cmd_in = argv[0];
-			cmd_path = get_path(cmd_in);
+			cmd_path = get_path(cmd_in, env);
 			if (cmd_path == NULL)
 			{
-				perror("command not found");
+				perror("./hsh");
 				exit(1);
 			}
 			val = execve(cmd_path, argv, env);
