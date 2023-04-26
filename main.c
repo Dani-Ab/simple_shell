@@ -10,7 +10,7 @@
 
 int main(int argc, char **argv, char **env)
 {
-	char *myprompt = "cisfun$ ", *line = NULL, *line_cpy = NULL;
+	char *myprompt = "$ ", *line = NULL, *line_cpy = NULL;
 	char *token = NULL, *delim = " \n", *out = "exit";
 	size_t len = 0, token_len = 0, i = 0;
 
