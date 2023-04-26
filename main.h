@@ -14,13 +14,15 @@
 #include <dirent.h>
 
 void execu(char **argv, char **env);
-char *get_path(char *command);
+char *get_path(char *command, char **env);
 char *_strdup(const char *original);
 char *_strcpy(char *copy, const char *original);
 char *_strcat(char *base, const char *add);
 size_t _strlen(const char *str);
 int _strcmp(const char *s1, const char *s2);
-char *_getenv(const char *name);
 int _strncmp(const char *s1, const char *s2, size_t n);
+void tokenizer(char *line, char ***argv, int *argc);
+char *_getenv(const char *name, char **envp);
+void tokenizer(char *line, char ***argv, int *argc);
 
 #endif
