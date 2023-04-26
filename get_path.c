@@ -2,16 +2,17 @@
 /**
  * get_path - returns the path of a command
  * @command: pointer to the command
+ * @env: pointer to array of environment variables
  *
  * Return: pointer to the path of the command, or NULL if not found
  */
 
-char *get_path(char *command)
+char *get_path(char *command, char **env)
 {
 	char  *path, *path_cp, *tokenph, *fileph;
 	struct stat buf;
 
-	path = getenv("PATH");
+	path = _getenv("PATH", env);
 	if (path)
 	{
 		path_cp = _strdup(path);
