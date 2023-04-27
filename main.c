@@ -54,7 +54,7 @@ void tokenizer(char *line, char ***argv, int *argc)
 
 int main(int argc, char **argv, char **env)
 {
-	char *myprompt = "$ ";
+	char *myprompt = ":) ";
 	char *line = NULL;
 	size_t len = 0;
 	char *out = "exit";
