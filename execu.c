@@ -37,7 +37,7 @@ void execu(char **argv, char **env)
 			{
 				perror("Error");
 				free(cmd_path);
-				fre_argv(argv, 0);
+				free_argv(argv, 0);
 				exit(EXIT_FAILURE);
 			}
 		}

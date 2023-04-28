@@ -9,7 +9,7 @@
  * Return: noting
  */
 
-void tokenizer(char *line, char ***argv, int *argc)
+void tokenizer(char *line, char ***token_arr, int *token_count)
 {
 	char *line_cpy = NULL;
 	char *token = NULL;
@@ -18,32 +18,64 @@ void tokenizer(char *line, char ***argv, int *argc)
 	int i = 0;
 
 	line_cpy = _strdup(line);
+	if (!line_cpy)
+	{
+		perror("strdup");
+		exit(EXIT_FAILURE);
+	}
 	token = strtok(line, delim);
 	while (token)
 	{
 		token_len++;
 		token = strtok(NULL, delim);
 	}
-	*argv = malloc(sizeof(char *) * (token_len + 1));
-	if (!*argv || !line_cpy)
+	*token_arr = malloc(sizeof(char *) * (token_len + 1));
+	if (!*token_arr)
 	{
-		free(argv);
-		perror("Error malloc line_cp or argv");
+		free(*token_arr);
+		perror("Errortokneizer  malloc");
 		exit(EXIT_FAILURE);
 	}
-	token_len = 0;
 	token = strtok(line_cpy, delim);
 	while (token != NULL)
 	{
-		(*argv)[i] = _strdup(token);
+		(*token_arr)[i] = _strdup(token);
 		token = strtok(NULL, delim);
 		i++;
 	}
-	(*argv)[i] = NULL;
-	*argc = i;
-	free(line_cpy);
+	(*token_arr)[i] = NULL;
+	*token_count = i;
+	if (line_cpy)
+	{
+		free(line_cpy);
+		line = NULL;
+	}
 }
 
+/**
+ * free_argv - to free argv array
+ * @argc: number of arguments passed
+ * @argv: pointer to array of arguments passed
+ *
+ * Return: noting
+ */
+void free_argv(char **argv, int argc)
+{
+	int i;
+
+	if (argv != NULL)
+	{
+		for (i = 0; i < argc; i++)
+		{
+			free(argv[i]);
+		}
+	}
+	if (argv)
+	{
+		free(argv);
+		argv = NULL;
+	}
+}
 /**
  * main - entry point for the shell program
  * @argc: number of arguments passed to the program
@@ -61,25 +93,36 @@ int main(int argc, char **argv, char **env)
 
 	while (1)
 	{
-		/*int argc = 0;*/
 		write(STDOUT_FILENO, myprompt, _strlen(myprompt));
 		if (getline(&line, &len, stdin) == -1)
+		{
+			if (line)
+			{
+				free(line);
+				line = NULL;
+			}
 			return (-1);
+		}
 		tokenizer(line, &argv, &argc);
 		if (argc == 0)
-		{
-			free(argv);
 			continue;
-		}
 		if (_strcmp(out, argv[0]) == 0)
 		{
-			free(argv);
-			free(line);
+			free_argv(argv, argc);
+			if (line)
+			{
+				free(line);
+				line = NULL;
+			}
 			return (0);
 		}
 		execu(argv, env);
-		free(argv);
+		free_argv(argv, argc);
+		if (line)
+		{
+			free(line);
+			line = NULL;
+		}
 	}
-	free(line);
 	return (0);
 }
