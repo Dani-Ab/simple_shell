@@ -11,8 +11,12 @@ char *_strdup(const char *original)
 	size_t len;
 	char *copy, *copy_int;
 
+	if (original == NULL)
+		return (NULL);
 	len = _strlen(original);
-	copy = malloc(sizeof(char) * len);
+	copy = malloc(sizeof(char) * (len + 1));
+	if (copy == NULL)
+		return (NULL);
 	copy_int = copy;
 	while (*original != '\0')
 	{
