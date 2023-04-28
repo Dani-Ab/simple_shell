@@ -16,9 +16,10 @@ void execu(char **argv, char **env)
 	int val = 0;
 
 	pid = fork();
-
 	if (pid == -1)
+	{
 		perror("Error");
+	}
 	if (pid == 0)
 	{
 		if (argv)
@@ -28,11 +29,17 @@ void execu(char **argv, char **env)
 			if (cmd_path == NULL)
 			{
 				perror("./hsh");
+				free_argv(argv, 0);
 				exit(1);
 			}
 			val = execve(cmd_path, argv, env);
 			if (val == -1)
+			{
 				perror("Error");
+				free(cmd_path);
+				fre_argv(argv, 0);
+				exit(EXIT_FAILURE);
+			}
 		}
 		exit(0);
 	}

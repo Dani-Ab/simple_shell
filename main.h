@@ -13,6 +13,7 @@
 #include <fcntl.h>
 #include <dirent.h>
 
+
 void execu(char **argv, char **env);
 char *get_path(char *command, char **env);
 char *_strdup(const char *original);
@@ -22,7 +23,8 @@ size_t _strlen(const char *str);
 int _strcmp(const char *s1, const char *s2);
 int _strncmp(const char *s1, const char *s2, size_t n);
 void tokenizer(char *line, char ***argv, int *argc);
-char *_getenv(const char *name, char **envp);
+void tokenizer(char *line, char ***token_arr, int *token_count);
 void tokenizer(char *line, char ***argv, int *argc);
-
+void free_argv(char **argv, int argc);
+char **tokenize(char *str);
 #endif
