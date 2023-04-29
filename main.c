@@ -3,9 +3,8 @@
 /**
  * tokenizer - tokenize input commmand for the shell program
  * @line: ouput of get line and input to tokenization
- * @argc: number of arguments passed to the program
- * @argv: pointer to array of arguments passed to the program
- *
+ * @token_arr: number of arguments passed to the program
+ * @token_count: number of tokes
  * Return: noting
  */
 
@@ -14,42 +13,34 @@ void tokenizer(char *line, char ***token_arr, int *token_count)
 	char *line_cpy = NULL;
 	char *token = NULL;
 	char *delim = " \n";
-	size_t token_len = 0;
 	int i = 0;
 
 	line_cpy = _strdup(line);
 	if (!line_cpy)
 	{
+		if (!line_cpy)
+		{
+			free(line_cpy);
+			line = NULL;
+		}
 		perror("strdup");
 		exit(EXIT_FAILURE);
 	}
 	token = strtok(line, delim);
 	while (token)
 	{
-		token_len++;
-		token = strtok(NULL, delim);
-	}
-	*token_arr = malloc(sizeof(char *) * (token_len + 1));
-	if (!*token_arr)
-	{
-		free(*token_arr);
-		perror("Errortokneizer  malloc");
-		exit(EXIT_FAILURE);
-	}
-	token = strtok(line_cpy, delim);
-	while (token != NULL)
-	{
 		(*token_arr)[i] = _strdup(token);
+		if (!(*token_arr)[i])
+		{
+			perror("strdup");
+			exit(EXIT_FAILURE);
+		}
 		token = strtok(NULL, delim);
 		i++;
 	}
 	(*token_arr)[i] = NULL;
 	*token_count = i;
-	if (line_cpy)
-	{
-		free(line_cpy);
-		line = NULL;
-	}
+	free(line_cpy);
 }
 
 /**
@@ -67,12 +58,9 @@ void free_argv(char **argv, int argc)
 	{
 		for (i = 0; i < argc; i++)
 		{
-			free(argv[i]);
+			if ((argv)[i])
+				free(argv[i]);
 		}
-	}
-	if (argv)
-	{
-		free(argv);
 		argv = NULL;
 	}
 }
@@ -86,10 +74,8 @@ void free_argv(char **argv, int argc)
 
 int main(int argc, char **argv, char **env)
 {
-	char *myprompt = ":) ";
-	char *line = NULL;
+	char *myprompt = ":) ", *line = NULL, *out = "exit";
 	size_t len = 0;
-	char *out = "exit";
 
 	while (1)
 	{
@@ -105,18 +91,17 @@ int main(int argc, char **argv, char **env)
 		}
 		tokenizer(line, &argv, &argc);
 		if (argc == 0)
+		{
+			free_argv(argv, argc);
 			continue;
+		}
 		if (_strcmp(out, argv[0]) == 0)
 		{
 			free_argv(argv, argc);
-			if (line)
-			{
-				free(line);
-				line = NULL;
-			}
+			free(line);
 			return (0);
 		}
-		execu(argv, env);
+		execu(argc, argv, env, line);
 		free_argv(argv, argc);
 		if (line)
 		{
@@ -124,5 +109,6 @@ int main(int argc, char **argv, char **env)
 			line = NULL;
 		}
 	}
+	free(line);
 	return (0);
 }
