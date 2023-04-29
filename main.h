@@ -14,7 +14,7 @@
 #include <dirent.h>
 
 
-void execu(char **argv, char **env);
+void execu(int argc, char **argv, char **env, char *line);
 char *get_path(char *command, char **env);
 char *_strdup(const char *original);
 char *_strcpy(char *copy, const char *original);
@@ -25,5 +25,4 @@ int _strncmp(const char *s1, const char *s2, size_t n);
 char *_getenv(const char *name, char **envp);
 void tokenizer(char *line, char ***token_arr, int *token_count);
 void free_argv(char **argv, int argc);
-char **tokenize(char *str);
 #endif

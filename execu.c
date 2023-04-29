@@ -9,7 +9,7 @@
  * If an error occurs during execution, an error message is displayed.
  */
 
-void execu(char **argv, char **env)
+void execu(int argc, char **argv, char **env, char *line)
 {
 	pid_t pid;
 	char *cmd_in, *cmd_path;
@@ -19,6 +19,7 @@ void execu(char **argv, char **env)
 	if (pid == -1)
 	{
 		perror("Error");
+		exit(1);
 	}
 	if (pid == 0)
 	{
@@ -29,7 +30,8 @@ void execu(char **argv, char **env)
 			if (cmd_path == NULL)
 			{
 				perror("./hsh");
-				free_argv(argv, 0);
+				free_argv(argv, argc);
+				free(line);
 				exit(1);
 			}
 			val = execve(cmd_path, argv, env);
@@ -42,9 +44,5 @@ void execu(char **argv, char **env)
 			}
 		}
 		exit(0);
-	}
-	else
-	{
-		wait(NULL);
 	}
 }
